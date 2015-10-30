@@ -26,19 +26,19 @@
 #ifndef HOODIE_H
 #define HOODIE_H
 
-#define HOODIE_VERSION_MAJOR 0
+#define HOODIE_VERSION_MAJOR 1
 #define HOODIE_VERSION_MINOR 0
-#define HOODIE_VERSION_BUILD 0
+#define HOODIE_VERSION_PATCH 1
 
-#define PIN_R1    9
-#define PIN_OE    10
-#define PIN_ROW_A 11
-#define PIN_ROW_B 12
-#define PIN_ROW_C 13
-#define PIN_ROW_D A0
-#define PIN_G1    A1
-#define PIN_STB   A3
-#define PIN_CLK   A4
+#define PIN_ROW_A 9
+#define PIN_ROW_B 10
+#define PIN_ROW_C 11
+#define PIN_ROW_D 12
+#define PIN_G1    13
+#define PIN_STB   A1
+#define PIN_CLK   A2
+#define PIN_R1    A3
+#define PIN_OE    A4
 
 #define HOODIE_SCREEN_WIDTH  32
 #define HOODIE_SCREEN_HEIGHT 16
@@ -61,7 +61,6 @@ class CHoodie {
     char _packetBuffer[BLE_PACKET_SIZE];
     int _packetSize;
     unsigned long _previousMilliseconds;
-    unsigned long _previousPacketMilliseconds;
 
   public:
     CHoodie(void) :
@@ -73,8 +72,7 @@ class CHoodie {
       _displayBuffer(),
       _packetBuffer(),
       _packetSize(0),
-      _previousMilliseconds(0),
-      _previousPacketMilliseconds(0) { }
+      _previousMilliseconds(0) { }
 
     void begin(void) {
       pinMode(PIN_R1, OUTPUT);
@@ -107,16 +105,13 @@ class CHoodie {
       }
       
       if (ble_available()) {
-        if ((current - _previousPacketMilliseconds) > BLE_PACKET_DELAY) {
-          _previousPacketMilliseconds = current;
-          _packetSize = 0;
-        }
-        
         while (ble_available()) {
           char c = ble_read();
 
           if (c == 0) {
             _packetBuffer[_packetSize] = 0;
+            _packetSize = 0;
+
             setText(_packetBuffer);
           }
           else if (_packetSize < sizeof(_packetBuffer)) {

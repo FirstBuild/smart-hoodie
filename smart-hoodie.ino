@@ -38,6 +38,7 @@ void enableInterrupt(void) {
 
 void setup(void) {
   Hoodie.begin();
+  Hoodie.setText("Stop! Hammer time...");
   enableInterrupt();
 }
 
