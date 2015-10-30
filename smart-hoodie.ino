@@ -21,6 +21,9 @@
  *
  */
 
+// uncomment the following line to flip the screen
+// #define HOODIE_SCREEN_FLIP
+
 #include <SPI.h>
 #include <EEPROM.h>
 #include <boards.h>

@@ -27,8 +27,8 @@
 #define HOODIE_H
 
 #define HOODIE_VERSION_MAJOR 1
-#define HOODIE_VERSION_MINOR 0
-#define HOODIE_VERSION_PATCH 1
+#define HOODIE_VERSION_MINOR 1
+#define HOODIE_VERSION_PATCH 0
 
 #define PIN_ROW_A 9
 #define PIN_ROW_B 10
@@ -145,6 +145,12 @@ class CHoodie {
     }
 
     void setPixel(int row, int column, int on) {
+
+#ifdef HOODIE_SCREEN_FLIP
+      row = HOODIE_SCREEN_HEIGHT - row - 1;
+      column = HOODIE_SCREEN_WIDTH - column - 1;
+#endif /* HOODIE_SCREEN_FLIP */
+
       int index = HOODIE_SCREEN_WIDTH_IN_BYTES - (column / 8) - 1;
       int offset = column % 8;
       int mask = 1 << offset;
